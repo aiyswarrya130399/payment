@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -22,14 +23,14 @@ jobs:
           UPI: ${{ secrets.MERCHANT_UPI_ID }}
           NAME: ${{ secrets.MERCHANT_NAME }}
         run: |
-          cat > config.js <<'EOF'
+          cat > config.js <<EOF
           // Auto-generated during CI. Do not commit your real config.js with secrets.
           const CONFIG = {
-            MERCHANT_UPI_ID: '${UPI}',
-            MERCHANT_NAME: '${NAME}'
+            MERCHANT_UPI_ID: "${UPI}",
+            MERCHANT_NAME: "${NAME}"
           };
           EOF
-          echo "Created config.js (from secrets) in workspace. "
+          echo "Created config.js (from secrets) in workspace."
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
