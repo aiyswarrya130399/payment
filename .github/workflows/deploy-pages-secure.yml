@@ -1,0 +1,39 @@
+name: Deploy to GitHub Pages (secure: generate config.js from secrets)
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create config.js from repository secrets
+        env:
+          UPI: ${{ secrets.MERCHANT_UPI_ID }}
+          NAME: ${{ secrets.MERCHANT_NAME }}
+        run: |
+          cat > config.js <<'EOF'
+          // Auto-generated during CI. Do not commit your real config.js with secrets.
+          const CONFIG = {
+            MERCHANT_UPI_ID: '${UPI}',
+            MERCHANT_NAME: '${NAME}'
+          };
+          EOF
+          echo "Created config.js (from secrets) in workspace."
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
+          publish_branch: gh-pages
