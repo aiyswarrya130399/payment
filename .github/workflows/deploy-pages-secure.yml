@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Deploy to GitHub Pages (secure: generate config.js from secrets)
 
 on:
   push:
@@ -12,7 +12,7 @@ permissions:
   id-token: write
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -33,13 +33,27 @@ jobs:
             MERCHANT_NAME: "${NAME}"
           };
           EOF
-          echo "Created config.js (from secrets) in workspace."
+          # Do NOT print the secret values. Print only lengths to confirm creation:
+          echo "Created config.js — MERCHANT_UPI_ID length: $(echo -n \"$UPI\" | wc -c), MERCHANT_NAME length: $(echo -n \"$NAME\" | wc -c)"
+
+      - name: (Optional) Build — add steps here if your site needs building
+        run: |
+          echo "No build step configured. If you need a build (npm run build), add it here."
+
+      - name: Show workspace (debug)
+        run: |
+          echo "Working directory: $(pwd)"
+          echo "Files:"
+          ls -la
+          echo "Git remotes:"
+          git remote -v || true
+          echo "Git config:"
+          git config --list || true
+
+      - name: Upload artifact for GitHub Pages
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: .
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./
-          publish_branch: gh-pages
-          # Optional: set a commit message
-          # commit_message: "ci: publish to gh-pages"
+        uses: actions/deploy-pages@v1
