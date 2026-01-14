@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages (manual git push via PAT)
+name: Deploy to GitHub Pages (manual git push via PAT) 
 
 on:
   push:
