@@ -29,7 +29,7 @@ jobs:
             MERCHANT_NAME: '${NAME}'
           };
           EOF
-          echo "Created config.js (from secrets) in workspace."
+          echo "Created config.js (from secrets) in workspace. "
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
