@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentorship Plans - UPI Payment</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+        
+        :root {
+            --primary: #00D4AA;
+            --primary-dark: #00B090;
+            --secondary: #6C5CE7;
+            --bg: #0A0E27;
+            --surface: #151B3D;
+            --surface-light: #1E2749;
+            --text: #FFFFFF;
+            --text-muted: #8B92B8;
+            --success: #00D4AA;
+            --accent: #FF6B9D;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Animated background gradient */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(108, 92, 231, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(0, 212, 170, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(255, 107, 157, 0.1) 0%, transparent 50%);
+            animation: gradientShift 20s ease infinite;
+            z-index: 0;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(5%, 5%) rotate(120deg); }
+            66% { transform: translate(-5%, 5%) rotate(240deg); }
+        }
+        
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 500px;
+            margin: auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeInDown 0.8s ease;
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 20px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            font-weight: 700;
+            box-shadow: 0 10px 40px rgba(0, 212, 170, 0.3);
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+        
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 16px;
+        }
+        
+        .card {
+            background: var(--surface);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+        
+        .form-group {
+            margin-bottom: 24px;
+        }
+        
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 16px 20px;
+            background: var(--surface-light);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            color: var(--text);
+            font-size: 16px;
+            font-family: 'Outfit', sans-serif;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(0, 212, 170, 0.1);
+        }
+        
+        input::placeholder {
+            color: var(--text-muted);
+        }
+        
+        .upi-id-display {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 18px;
+            padding: 20px;
+            background: var(--bg);
+            border-radius: 12px;
+            text-align: center;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            margin-bottom: 24px;
+            word-break: break-all;
+        }
+        
+        .amount-input {
+            font-size: 32px;
+            font-weight: 700;
+            text-align: center;
+            padding: 24px;
+        }
+        
+        .qr-section {
+            text-align: center;
+            margin: 32px 0;
+            animation: fadeIn 0.8s ease 0.4s both;
+        }
+        
+        #qrcode {
+            display: inline-block;
+            padding: 20px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .button {
+            width: 100%;
+            padding: 18px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Outfit', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .button-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--bg);
+            box-shadow: 0 10px 30px rgba(0, 212, 170, 0.4);
+            margin-bottom: 12px;
+        }
+        
+        .button-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(0, 212, 170, 0.5);
+        }
+        
+        .button-secondary {
+            background: var(--surface-light);
+            color: var(--text);
+            border: 2px solid var(--primary);
+        }
+        
+        .button-secondary:hover {
+            background: var(--primary);
+            color: var(--bg);
+        }
+        
+        .upi-apps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 12px;
+            margin-top: 24px;
+        }
+        
+        .upi-app {
+            background: var(--surface-light);
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .upi-app:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(0, 212, 170, 0.2);
+        }
+        
+        .upi-app-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        
+        .upi-app-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+        
+        .info-box {
+            background: rgba(0, 212, 170, 0.1);
+            border-left: 4px solid var(--primary);
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 24px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+        
+        .plans-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+        
+        .plan-category {
+            grid-column: 1 / -1;
+            margin-top: 24px;
+            margin-bottom: 12px;
+        }
+        
+        .plan-category:first-child {
+            margin-top: 0;
+        }
+        
+        .category-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .category-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+        
+        .category-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-left: 12px;
+        }
+        
+        .plan-card {
+            background: var(--surface-light);
+            border-radius: 16px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .plan-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .plan-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(0, 212, 170, 0.2);
+        }
+        
+        .plan-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .plan-card.selected {
+            border-color: var(--primary);
+            background: rgba(0, 212, 170, 0.1);
+        }
+        
+        .plan-card.selected::before {
+            transform: scaleX(1);
+        }
+        
+        .popular-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: var(--accent);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .plan-name {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+        
+        .plan-price {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+        }
+        
+        .plan-price .currency {
+            font-size: 24px;
+        }
+        
+        .plan-price .period {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+        
+        .plan-description {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+        
+        .custom-amount-toggle {
+            text-align: center;
+            margin: 20px 0;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+        
+        .custom-amount-link {
+            color: var(--primary);
+            cursor: pointer;
+            text-decoration: underline;
+            font-weight: 600;
+        }
+        
+        .custom-amount-link:hover {
+            color: var(--secondary);
+        }
+        
+        .custom-amount-section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            margin: 24px 0;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 32px 20px;
+            color: var(--text-muted);
+            font-size: 14px;
+            position: relative;
+            z-index: 1;
+            margin-top: auto;
+        }
+        
+        .secure-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 212, 170, 0.1);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-top: 16px;
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 16px;
+            }
+            
+            .card {
+                padding: 24px;
+            }
+            
+            h1 {
+                font-size: 28px;
+            }
+            
+            .upi-apps {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">📚</div>
+            <h1>Mentorship Plans</h1>
+            <p class="subtitle">Invest in Your Future - Pay with UPI</p>
+        </div>
+        
+        <div class="card">
+            <h2 style="text-align: center; margin-bottom: 8px; font-size: 24px;">Choose Your Mentorship Plan</h2>
+            <p style="text-align: center; color: var(--text-muted); margin-bottom: 32px; font-size: 14px;">Select the plan that best fits your learning needs</p>
+            
+            <div class="plans-container" id="plansContainer">
+                <!-- Plans will be dynamically inserted here -->
+            </div>
+            
+            <div class="custom-amount-toggle">
+                <span>Need a different amount? </span>
+                <span class="custom-amount-link" onclick="toggleCustomAmount()">Enter custom amount</span>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <div class="custom-amount-section" id="customAmountSection">
+                <div class="form-group">
+                    <label>Enter Amount (₹)</label>
+                    <input type="number" id="amount" class="amount-input" placeholder="100" min="1">
+                </div>
+                
+                <div class="form-group">
+                    <label>Payment Note (Optional)</label>
+                    <input type="text" id="description" placeholder="What is this payment for?">
+                </div>
+                
+                <button class="button button-primary" onclick="generatePayment()">
+                    <span style="position: relative; z-index: 1;">🔥 Generate Payment Link</span>
+                </button>
+            </div>
+            
+            <div id="selectedPlanInfo" style="display: none; text-align: center; margin-bottom: 20px;">
+                <div style="background: rgba(0, 212, 170, 0.1); padding: 16px; border-radius: 12px; border: 1px solid var(--primary);">
+                    <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;" id="selectedPlanCategory"></div>
+                    <div style="font-size: 24px; font-weight: 700; color: var(--primary);" id="selectedPlanName"></div>
+                    <div style="font-size: 32px; font-weight: 700; color: var(--text); margin-top: 8px;">
+                        ₹<span id="selectedPlanAmount"></span><span style="font-size: 14px; color: var(--text-muted); font-weight: 400;" id="selectedPlanPeriod"></span>
+                    </div>
+                </div>
+                
+                <div class="form-group" style="margin-top: 20px;">
+                    <label>Payment Note (Optional)</label>
+                    <input type="text" id="planDescription" placeholder="Add a note for this payment">
+                </div>
+                
+                <button class="button button-primary" onclick="generatePaymentFromPlan()">
+                    <span style="position: relative; z-index: 1;">🔥 Proceed to Payment</span>
+                </button>
+                
+                <button class="button button-secondary" onclick="generateQROnly()" style="margin-top: 12px;">
+                    <span style="position: relative; z-index: 1;">📱 Show QR Code Only</span>
+                </button>
+                
+                <button class="button button-secondary" onclick="deselectPlan()" style="margin-top: 12px;">
+                    <span style="position: relative; z-index: 1;">← Choose Different Plan</span>
+                </button>
+            </div>
+            
+            <div id="paymentSection" style="display: none;">
+                <div class="qr-section">
+                    <div id="qrcode"></div>
+                    <p style="margin-top: 16px; color: var(--text-muted); font-size: 14px;">Scan with any UPI app</p>
+                </div>
+                
+                <button class="button button-secondary" onclick="openUpiApp()">
+                    <span style="position: relative; z-index: 1;">📱 Open UPI App</span>
+                </button>
+                
+                <button class="button button-secondary" onclick="copyLink()" style="margin-top: 12px;">
+                    <span style="position: relative; z-index: 1;">📋 Copy Payment Link</span>
+                </button>
+                
+                <div class="upi-apps">
+                    <div class="upi-app" onclick="openSpecificApp('phonepe')">
+                        <div class="upi-app-icon">💜</div>
+                        <div class="upi-app-name">PhonePe</div>
+                    </div>
+                    <div class="upi-app" onclick="openSpecificApp('paytm')">
+                        <div class="upi-app-icon">💙</div>
+                        <div class="upi-app-name">Paytm</div>
+                    </div>
+                    <div class="upi-app" onclick="openSpecificApp('gpay')">
+                        <div class="upi-app-icon">🔵</div>
+                        <div class="upi-app-name">Google Pay</div>
+                    </div>
+                </div>
+                
+                <p style="text-align: center; color: var(--text-muted); font-size: 12px; margin-top: 16px;">
+                    💡 <strong>On Android:</strong> Choose your app above<br>
+                    <strong>On iPhone:</strong> Use QR code or "Open UPI App" button
+                </p>
+                
+                <div class="info-box">
+                    <strong>💡 How to pay:</strong> Scan the QR code or click "Open UPI App" to pay directly. The payment is secure and your money will be transferred instantly via UPI.
+                </div>
+            </div>
+            
+            <div class="secure-badge">
+                <span>🔒</span>
+                <span>Secure UPI Payment</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>Powered by UPI | NPCI</p>
+        <p style="margin-top: 8px; font-size: 12px;">Zero transaction fees • Direct bank transfer</p>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="config.js"></script>
+    <script>
+        // ========================================
+        // 💰 MENTORSHIP PLANS
+        // ========================================
+        const MERCHANT_UPI_ID = CONFIG.MERCHANT_UPI_ID;
+        const MERCHANT_NAME = CONFIG.MERCHANT_NAME;
+        
+        // ========================================
+        // 💰 MENTORSHIP PLANS
+        // ========================================
+        const PLANS = [
+            {
+                id: 'daily-1group',
+                category: 'Daily Mentorship',
+                name: '1 Group',
+                amount: 900,
+                period: '/month',
+                description: 'Daily mentorship for one group',
+                popular: false,
+                categoryOrder: 1
+            },
+            {
+                id: 'daily-2groups',
+                category: 'Daily Mentorship',
+                name: '2 Groups',
+                amount: 1500,
+                period: '/month',
+                description: 'Daily mentorship for two groups',
+                popular: true,
+                categoryOrder: 1
+            },
+            {
+                id: 'subject-mentorship',
+                category: 'Subject Mentorship',
+                name: 'Single Subject',
+                amount: 1500,
+                period: '/until exam',
+                description: 'Complete mentorship for one subject',
+                popular: false,
+                categoryOrder: 2
+            },
+            {
+                id: 'onetime-call',
+                category: 'One-Time Mentorship',
+                name: 'Google Meet Call',
+                amount: 350,
+                period: '/20 mins',
+                description: 'One-time mentorship session',
+                popular: false,
+                categoryOrder: 3
+            }
+        ];
+        // ========================================
+        // Note: Your UPI ID is kept private and never shown to customers
+        
+        let currentUpiLink = '';
+        let qrCodeInstance = null;
+        let selectedPlan = null;
+        
+        // Initialize plans on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            renderPlans();
+        });
+        
+        function renderPlans() {
+            const container = document.getElementById('plansContainer');
+            container.innerHTML = '';
+            
+            // Group plans by category
+            const categories = {};
+            PLANS.forEach((plan, index) => {
+                if (!categories[plan.category]) {
+                    categories[plan.category] = {
+                        plans: [],
+                        order: plan.categoryOrder
+                    };
+                }
+                categories[plan.category].plans.push({ ...plan, index });
+            });
+            
+            // Sort categories by order
+            const sortedCategories = Object.entries(categories).sort((a, b) => a[1].order - b[1].order);
+            
+            // Render each category
+            sortedCategories.forEach(([categoryName, categoryData]) => {
+                // Add category header
+                const categoryHeader = document.createElement('div');
+                categoryHeader.className = 'plan-category';
+                categoryHeader.innerHTML = `
+                    <div class="category-title">${categoryName}</div>
+                `;
+                container.appendChild(categoryHeader);
+                
+                // Add plans in this category
+                categoryData.plans.forEach(plan => {
+                    const planCard = document.createElement('div');
+                    planCard.className = 'plan-card';
+                    planCard.onclick = () => selectPlan(plan.index);
+                    
+                    planCard.innerHTML = `
+                        ${plan.popular ? '<div class="popular-badge">Popular</div>' : ''}
+                        <div class="plan-name">${plan.name}</div>
+                        <div class="plan-price">
+                            <span class="currency">₹</span>${plan.amount}<span class="period">${plan.period}</span>
+                        </div>
+                        <div class="plan-description">${plan.description}</div>
+                    `;
+                    
+                    container.appendChild(planCard);
+                });
+            });
+        }
+        
+        function selectPlan(planIndex) {
+            selectedPlan = PLANS[planIndex];
+            
+            // Update UI to show selected plan
+            document.querySelectorAll('.plan-card').forEach((card, index) => {
+                card.classList.remove('selected');
+            });
+            
+            // Find and select the correct card
+            const allCards = document.querySelectorAll('.plan-card');
+            let cardIndex = 0;
+            for (let i = 0; i < PLANS.length; i++) {
+                if (i === planIndex) {
+                    allCards[cardIndex].classList.add('selected');
+                    break;
+                }
+                cardIndex++;
+            }
+            
+            // Hide plans, show selected plan info
+            document.getElementById('plansContainer').style.display = 'none';
+            document.querySelector('.custom-amount-toggle').style.display = 'none';
+            document.querySelector('.divider').style.display = 'none';
+            document.getElementById('selectedPlanInfo').style.display = 'block';
+            document.getElementById('selectedPlanCategory').textContent = selectedPlan.category;
+            document.getElementById('selectedPlanName').textContent = selectedPlan.name;
+            document.getElementById('selectedPlanAmount').textContent = selectedPlan.amount;
+            document.getElementById('selectedPlanPeriod').textContent = selectedPlan.period;
+            
+            // Hide custom amount section if it was open
+            document.getElementById('customAmountSection').style.display = 'none';
+            
+            // Clear payment section if it was showing
+            document.getElementById('paymentSection').style.display = 'none';
+        }
+        
+        function deselectPlan() {
+            selectedPlan = null;
+            document.querySelectorAll('.plan-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.getElementById('plansContainer').style.display = 'grid';
+            document.querySelector('.custom-amount-toggle').style.display = 'block';
+            document.querySelector('.divider').style.display = 'block';
+            document.getElementById('selectedPlanInfo').style.display = 'none';
+            document.getElementById('paymentSection').style.display = 'none';
+        }
+        
+        function toggleCustomAmount() {
+            const section = document.getElementById('customAmountSection');
+            const isVisible = section.style.display === 'block';
+            
+            if (isVisible) {
+                section.style.display = 'none';
+            } else {
+                section.style.display = 'block';
+                document.getElementById('amount').focus();
+                // Hide selected plan if any
+                deselectPlan();
+            }
+            
+            // Hide payment section if it was showing
+            document.getElementById('paymentSection').style.display = 'none';
+        }
+        
+        function generatePaymentFromPlan() {
+            if (!selectedPlan) {
+                alert('Please select a plan first');
+                return;
+            }
+            
+            const description = document.getElementById('planDescription').value.trim() || selectedPlan.name;
+            generatePaymentWithDetails(selectedPlan.amount, description);
+        }
+        
+        function generateQROnly() {
+            if (!selectedPlan) {
+                alert('Please select a plan first');
+                return;
+            }
+            
+            const description = document.getElementById('planDescription').value.trim() || selectedPlan.name;
+            
+            // Check if merchant has configured their UPI ID
+            if (MERCHANT_UPI_ID === 'yourname@paytm') {
+                alert('⚠️ Merchant needs to configure their UPI ID in the code first!');
+                return;
+            }
+            
+            // Generate UPI payment link
+            let upiLink = `upi://pay?pa=${encodeURIComponent(MERCHANT_UPI_ID)}&am=${encodeURIComponent(selectedPlan.amount)}`;
+            
+            if (MERCHANT_NAME && MERCHANT_NAME !== 'Your Business Name') {
+                upiLink += `&pn=${encodeURIComponent(MERCHANT_NAME)}`;
+            }
+            
+            if (description) {
+                upiLink += `&tn=${encodeURIComponent(description)}`;
+            }
+            
+            upiLink += '&cu=INR';
+            currentUpiLink = upiLink;
+            
+            // Clear previous QR code
+            const qrcodeDiv = document.getElementById('qrcode');
+            qrcodeDiv.innerHTML = '';
+            
+            // Generate new QR code
+            qrCodeInstance = new QRCode(qrcodeDiv, {
+                text: upiLink,
+                width: 200,
+                height: 200,
+                colorDark: "#0A0E27",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+            
+            // Show only QR section, hide app buttons
+            document.getElementById('paymentSection').style.display = 'block';
+            document.getElementById('qrcode').parentElement.style.display = 'block';
+            
+            // Hide all buttons except copy link
+            const buttons = document.querySelectorAll('#paymentSection .button');
+            buttons.forEach(btn => {
+                if (btn.textContent.includes('Copy')) {
+                    btn.style.display = 'block';
+                } else {
+                    btn.style.display = 'none';
+                }
+            });
+            
+            // Hide UPI apps section
+            document.querySelector('.upi-apps').style.display = 'none';
+            document.querySelector('.upi-apps').previousElementSibling.style.display = 'none';
+            
+            // Smooth scroll to QR code
+            setTimeout(() => {
+                qrcodeDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        }
+        
+        function generatePayment() {
+            const amount = document.getElementById('amount').value.trim();
+            const description = document.getElementById('description').value.trim();
+            
+            if (!amount || amount <= 0) {
+                alert('Please enter a valid amount');
+                return;
+            }
+            
+            generatePaymentWithDetails(amount, description || 'Payment');
+        }
+        
+        function generatePaymentWithDetails(amount, description) {
+            // Check if merchant has configured their UPI ID
+            if (MERCHANT_UPI_ID === 'yourname@paytm') {
+                alert('⚠️ Merchant needs to configure their UPI ID in the code first!');
+                return;
+            }
+            
+            // Generate UPI payment link with merchant's UPI ID
+            let upiLink = `upi://pay?pa=${encodeURIComponent(MERCHANT_UPI_ID)}&am=${encodeURIComponent(amount)}`;
+            
+            // Add merchant name if configured
+            if (MERCHANT_NAME && MERCHANT_NAME !== 'Your Business Name') {
+                upiLink += `&pn=${encodeURIComponent(MERCHANT_NAME)}`;
+            }
+            
+            // Add customer's description/note
+            if (description) {
+                upiLink += `&tn=${encodeURIComponent(description)}`;
+            }
+            
+            upiLink += '&cu=INR';
+            currentUpiLink = upiLink;
+            
+            // Clear previous QR code
+            const qrcodeDiv = document.getElementById('qrcode');
+            qrcodeDiv.innerHTML = '';
+            
+            // Generate new QR code
+            qrCodeInstance = new QRCode(qrcodeDiv, {
+                text: upiLink,
+                width: 200,
+                height: 200,
+                colorDark: "#0A0E27",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+            
+            // Show payment section
+            document.getElementById('paymentSection').style.display = 'block';
+            
+            // Make sure all buttons are visible
+            const buttons = document.querySelectorAll('#paymentSection .button');
+            buttons.forEach(btn => btn.style.display = 'block');
+            
+            // Make sure UPI apps section is visible
+            document.querySelector('.upi-apps').style.display = 'grid';
+            const upiAppsNote = document.querySelector('.upi-apps').nextElementSibling;
+            if (upiAppsNote) upiAppsNote.style.display = 'block';
+            
+            // Smooth scroll to QR code
+            setTimeout(() => {
+                qrcodeDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        }
+        
+        function openUpiApp() {
+            if (!currentUpiLink) {
+                alert('Please generate payment link first');
+                return;
+            }
+            window.location.href = currentUpiLink;
+        }
+        
+        function openSpecificApp(app) {
+            if (!currentUpiLink) {
+                alert('Please generate payment link first');
+                return;
+            }
+            
+            let appLink = currentUpiLink;
+            let appName = '';
+            
+            // App-specific deep link formats (works best on Android)
+            switch(app) {
+                case 'phonepe':
+                    appLink = currentUpiLink.replace('upi://pay', 'phonepe://pay');
+                    appName = 'PhonePe';
+                    break;
+                case 'paytm':
+                    appLink = currentUpiLink.replace('upi://pay', 'paytmmp://pay');
+                    appName = 'Paytm';
+                    break;
+                case 'gpay':
+                    appLink = currentUpiLink.replace('upi://pay', 'tez://upi/pay');
+                    appName = 'Google Pay';
+                    break;
+            }
+            
+            // Try to open the specific app
+            const clickTime = Date.now();
+            window.location.href = appLink;
+            
+            // Fallback: If app doesn't open in 2 seconds, try generic UPI link
+            setTimeout(() => {
+                const timeElapsed = Date.now() - clickTime;
+                // If still on the same page (app didn't open), try generic UPI
+                if (timeElapsed > 1800 && document.hasFocus()) {
+                    window.location.href = currentUpiLink;
+                }
+            }, 2000);
+        }
+        
+        function copyLink() {
+            if (!currentUpiLink) {
+                alert('Please generate payment link first');
+                return;
+            }
+            
+            navigator.clipboard.writeText(currentUpiLink).then(() => {
+                const btn = event.target.closest('button');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<span style="position: relative; z-index: 1;">✅ Copied!</span>';
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                }, 2000);
+            }).catch(() => {
+                // Fallback for browsers that don't support clipboard API
+                const textArea = document.createElement('textarea');
+                textArea.value = currentUpiLink;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                alert('Payment link copied to clipboard!');
+            });
+        }
+        
+        // Auto-generate on Enter key
+        document.getElementById('amount').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') generatePayment();
+        });
+        
+        document.getElementById('description').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') generatePayment();
+        });
+    </script>
+</body>
+</html>
