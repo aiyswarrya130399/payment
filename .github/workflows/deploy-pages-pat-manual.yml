@@ -1,0 +1,88 @@
+name: Deploy to GitHub Pages (manual git push via PAT) 
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository (no credentials persisted)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Ensure DEPLOY_TOKEN secret exists
+        run: |
+          if [ -z "${{ secrets.DEPLOY_TOKEN }}" ]; then
+            echo "ERROR: DEPLOY_TOKEN secret is missing" >&2
+            exit 1
+          fi
+          # print token length only (sanity check)
+          echo "DEPLOY_TOKEN length: $(echo -n "${{ secrets.DEPLOY_TOKEN }}" | wc -c)"
+
+      - name: Create config.js from repository secrets
+        env:
+          UPI: ${{ secrets.MERCHANT_UPI_ID }}
+          NAME: ${{ secrets.MERCHANT_NAME }}
+        run: |
+          cat > config.js <<EOF
+          // Auto-generated during CI. Do not commit your real config.js with secrets.
+          const CONFIG = {
+            MERCHANT_UPI_ID: "${UPI:-yourname@paytm}",
+            MERCHANT_NAME: "${NAME:-Your Mentorship Program}"
+          };
+          EOF
+          echo "Created config.js (from secrets)."
+
+      - name: (Optional) Build step (modify if you need a build)
+        run: |
+          echo "No build step configured. If your project needs a build, add it here (e.g. npm ci && npm run build)."
+
+      - name: Prepare gh-pages branch (orphan) and commit site
+        env:
+          REPO: aiyswarrya130399/payment
+          TOKEN: ${{ secrets.DEPLOY_TOKEN }}
+        run: |
+          set -e
+          # configure git identity for commit
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Ensure remote uses token authentication (x-access-token style). The token is masked by actions.
+          git remote set-url origin https://x-access-token:${TOKEN}@github.com/${REPO}.git
+
+          # Create an orphan gh-pages branch
+          git checkout --orphan gh-pages
+
+          # Remove all files from index (don’t remove .git)
+          git rm -rf . >/dev/null 2>&1 || true
+
+          # Copy current workspace files into the index
+          # (they're already in the workspace; add them back)
+          git add -A
+
+          # If nothing to commit, still create an empty commit to trigger Pages
+          if git diff --cached --quiet; then
+            echo "Nothing changed — creating an empty commit to trigger deployment"
+            git commit --allow-empty -m "ci: redeploy to gh-pages"
+          else
+            git commit -m "ci: publish to gh-pages (via PAT)"
+          fi
+
+          # Force-push to gh-pages branch using the token-authenticated remote
+          git push --force origin gh-pages
+
+      - name: Show deployed site URL
+        run: |
+          echo "If the push succeeded, GitHub Pages will serve the site at:"
+          echo "https://aiyswarrya130399.github.io/payment/"
