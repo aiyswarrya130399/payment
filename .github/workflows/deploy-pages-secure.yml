@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Deploy to GitHub Pages (via PAT)
 
 on:
   push:
@@ -12,7 +12,7 @@ permissions:
   id-token: write
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -20,6 +20,16 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+
+      - name: Ensure secrets exist
+        run: |
+          if [ -z "${{ secrets.DEPLOY_TOKEN }}" ]; then
+            echo "ERROR: DEPLOY_TOKEN secret is missing" >&2
+            exit 1
+          fi
+          if [ -z "${{ secrets.MERCHANT_UPI_ID }}" ]; then
+            echo "WARNING: MERCHANT_UPI_ID not set. config.js will contain placeholder." >&2
+          fi
 
       - name: Create config.js from repository secrets
         env:
@@ -29,31 +39,20 @@ jobs:
           cat > config.js <<EOF
           // Auto-generated during CI. Do not commit your real config.js with secrets.
           const CONFIG = {
-            MERCHANT_UPI_ID: "${UPI}",
-            MERCHANT_NAME: "${NAME}"
+            MERCHANT_UPI_ID: "${UPI:-yourname@paytm}",
+            MERCHANT_NAME: "${NAME:-Your Mentorship Program}"
           };
           EOF
-          # Do NOT print the secret values. Print only lengths to confirm creation:
-          echo "Created config.js — MERCHANT_UPI_ID length: $(echo -n \"$UPI\" | wc -c), MERCHANT_NAME length: $(echo -n \"$NAME\" | wc -c)"
+          echo "Created config.js (from secrets)."
 
       - name: (Optional) Build — add steps here if your site needs building
         run: |
-          echo "No build step configured. If you need a build (npm run build), add it here."
+          echo "No build step configured. If you need a build (npm ci && npm run build), add it here."
 
-      - name: Show workspace (debug)
-        run: |
-          echo "Working directory: $(pwd)"
-          echo "Files:"
-          ls -la
-          echo "Git remotes:"
-          git remote -v || true
-          echo "Git config:"
-          git config --list || true
-
-      - name: Upload artifact for GitHub Pages
-        uses: actions/upload-pages-artifact@v1
+      - name: Deploy to gh-pages via peaceiris (uses PAT)
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: .
-
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v1
+          github_token: ${{ secrets.DEPLOY_TOKEN }}
+          publish_dir: ./
+          publish_branch: gh-pages
+          commit_message: "ci: publish to gh-pages (via PAT)"
