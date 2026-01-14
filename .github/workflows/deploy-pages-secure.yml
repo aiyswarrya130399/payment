@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages (secure: generate config.js from secrets)
+name: Deploy to GitHub Pages
 
 on:
   push:
