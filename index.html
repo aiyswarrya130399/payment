@@ -737,10 +737,11 @@
             }
 
             const upiLinkEl = document.getElementById('upiLink');
-            if (upiLinkEl) {
+            //if (upiLinkEl) {
                 // Use intent-based URL for Android, standard upi:// for others
-                upiLinkEl.href = isAndroid() ? intentUrl : upiString;
-            }
+                // upiLinkEl.href = isAndroid() ? intentUrl : upiString;
+                upiLinkEl.href = intentUrl ;
+            //}
         }
 
         function showPaymentModal() {
