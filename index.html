@@ -316,33 +316,6 @@
             border-radius: 6px;
         }
 
-        .upi-link-btn {
-            width: 100%;
-            padding: 13px;
-            background: linear-gradient(135deg, #00c853 0%, #00a344 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1em;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 12px;
-            text-decoration: none;
-            display: block;
-            box-shadow: 0 4px 15px rgba(0, 200, 83, 0.3);
-            transition: all 0.3s ease;
-        }
-
-        .upi-link-btn:hover {
-            background: linear-gradient(135deg, #00a544 0%, #008833 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 200, 83, 0.4);
-        }
-
-        .upi-link-btn:active {
-            transform: translateY(0);
-        }
-
         .custom-amount-section {
             margin-top: 30px;
             padding: 20px;
@@ -453,12 +426,6 @@
             #qrcode img {
                 max-width: 180px !important;
                 height: auto !important;
-            }
-
-            .upi-link-btn {
-                padding: 12px;
-                font-size: 0.95em;
-                margin-top: 10px;
             }
         }
 
@@ -613,8 +580,6 @@
                 <p style="margin-bottom: 10px; font-weight: 600; font-size: 0.9em; color: #555;">Scan QR Code to Pay</p>
                 <div id="qrcode"></div>
             </div>
-
-            <a id="upiLink" class="upi-link-btn" href="#">Pay with UPI App</a>
             
             <p style="margin-top: 12px; color: #666; font-size: 0.8em; line-height: 1.4;">
                 After payment, please share the transaction ID with us
@@ -625,7 +590,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
         const UPI_ID = 'swotifyca@ybl';
-        const MERCHANT_NAME = 'AiyswarryaM';
+        const MERCHANT_NAME = 'Aiyswarrya Mohan';
         
         let selectedPlan = null;
         let qrCodeInstance = null;
@@ -701,10 +666,6 @@
                 generateQRCode();
             }
         }
-        
-        function isAndroid() {
-            return /Android/i.test(navigator.userAgent);
-        }
 
         function generateQRCode() {
             if (!selectedPlan) return;
@@ -720,9 +681,6 @@
 
             const upiString = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${selectedPlan.amount}&cu=INR&tn=${encodeURIComponent(description)}`;
 
-            // Generate intent-based URL for Android
-            const intentUrl = `intent://pay?pa=${UPI_ID}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${selectedPlan.amount}&cu=INR&tn=${encodeURIComponent(description)}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end`;
-
             const qrcodeEl = document.getElementById('qrcode');
             if (qrcodeEl) {
                 qrcodeEl.innerHTML = '';
@@ -735,13 +693,6 @@
                     correctLevel: QRCode.CorrectLevel.H
                 });
             }
-
-            const upiLinkEl = document.getElementById('upiLink');
-            //if (upiLinkEl) {
-                // Use intent-based URL for Android, standard upi:// for others
-                // upiLinkEl.href = isAndroid() ? intentUrl : upiString;
-                upiLinkEl.href = intentUrl ;
-            //}
         }
 
         function showPaymentModal() {
