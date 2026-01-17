@@ -167,9 +167,9 @@
 
         .close-btn {
             position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 2em;
+            top: 8px;
+            right: 10px;
+            font-size: 1.6em;
             cursor: pointer;
             color: #666;
             background: none;
@@ -190,49 +190,59 @@
         }
 
         .qr-container {
-            margin: 25px 0;
-            padding: 25px;
+            margin: 15px 0;
+            padding: 15px;
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-radius: 15px;
+            border-radius: 12px;
             box-shadow: inset 0 2px 8px rgba(0,0,0,0.08);
         }
 
         .qr-container p {
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             font-weight: 600;
-            font-size: 1em;
+            font-size: 0.9em;
             color: #555;
         }
 
         #qrcode {
             display: flex;
             justify-content: center;
-            margin: 20px 0;
-            padding: 15px;
+            margin: 12px 0;
+            padding: 10px;
             background: white;
-            border-radius: 12px;
+            border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         #qrcode img {
             max-width: 100%;
             height: auto;
-            border-radius: 8px;
+            border-radius: 6px;
         }
 
         .payment-details {
-            margin: 20px 0;
+            margin: 10px 0;
             text-align: left;
             background: linear-gradient(135deg, #e8eaf6 0%, #f3e5f5 100%);
-            padding: 18px;
-            border-radius: 12px;
+            padding: 12px 15px;
+            border-radius: 10px;
             border: 1px solid #d1d5f0;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .payment-info {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
         }
 
         .payment-details p {
-            margin: 10px 0;
-            font-size: 0.95em;
-            line-height: 1.6;
+            margin: 0;
+            font-size: 0.85em;
+            line-height: 1.4;
         }
 
         .payment-details strong {
@@ -241,15 +251,15 @@
 
         .upi-link-btn {
             width: 100%;
-            padding: 16px;
+            padding: 13px;
             background: linear-gradient(135deg, #00c853 0%, #00a344 100%);
             color: white;
             border: none;
-            border-radius: 12px;
-            font-size: 1.1em;
+            border-radius: 10px;
+            font-size: 1em;
             font-weight: bold;
             cursor: pointer;
-            margin-top: 20px;
+            margin-top: 12px;
             text-decoration: none;
             display: block;
             box-shadow: 0 4px 15px rgba(0, 200, 83, 0.3);
@@ -267,40 +277,43 @@
         }
 
         .quantity-selector {
-            margin: 20px 0;
-            padding: 18px;
+            margin: 0;
+            padding: 8px 10px;
             background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
-            border-radius: 12px;
+            border-radius: 8px;
             border: 2px solid #ff9800;
             box-shadow: 0 2px 8px rgba(255, 152, 0, 0.15);
+            min-width: 140px;
         }
 
         .quantity-selector label {
             display: block;
-            margin-bottom: 12px;
+            margin-bottom: 6px;
             font-weight: 600;
             color: #333;
-            font-size: 0.95em;
+            font-size: 0.75em;
+            text-align: center;
         }
 
         .quantity-controls {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
+            gap: 8px;
         }
 
         .quantity-btn {
-            width: 45px;
-            height: 45px;
+            width: 32px;
+            height: 32px;
             border: none;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            font-size: 1.5em;
-            border-radius: 8px;
+            font-size: 1.2em;
+            border-radius: 6px;
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+            flex-shrink: 0;
         }
 
         .quantity-btn:hover {
@@ -313,23 +326,24 @@
         }
 
         .quantity-input {
-            width: 80px;
-            padding: 12px;
+            width: 45px;
+            padding: 6px 4px;
             text-align: center;
-            font-size: 1.2em;
+            font-size: 0.9em;
             font-weight: 600;
             border: 2px solid #667eea;
-            border-radius: 8px;
+            border-radius: 6px;
             background: white;
         }
 
         .total-amount {
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 2px dashed #ff9800;
-            font-size: 1.15em;
+            margin-top: 6px;
+            padding-top: 6px;
+            border-top: 1px dashed #ff9800;
+            font-size: 0.8em;
             color: #667eea;
             font-weight: bold;
+            text-align: center;
         }
 
         .custom-amount-section {
@@ -384,93 +398,113 @@
             }
 
             .modal-content {
-                padding: 25px 20px;
+                padding: 20px 16px;
                 width: 95%;
-                max-height: 92vh;
-                border-radius: 16px;
+                border-radius: 14px;
             }
 
             .modal-content h2 {
-                font-size: 1.3em;
-                margin-bottom: 15px;
+                font-size: 1.2em;
+                margin-bottom: 10px;
             }
 
             .payment-details {
-                padding: 15px;
-                font-size: 0.9em;
+                grid-template-columns: 1fr;
+                gap: 10px;
+                padding: 10px 12px;
+            }
+
+            .payment-info p {
+                font-size: 0.8em;
             }
 
             .quantity-selector {
-                padding: 15px;
+                width: 100%;
+                min-width: unset;
             }
 
             .quantity-btn {
-                width: 42px;
-                height: 42px;
-                font-size: 1.4em;
-            }
-
-            .quantity-input {
-                width: 70px;
-                padding: 10px;
+                width: 30px;
+                height: 30px;
                 font-size: 1.1em;
             }
 
+            .quantity-input {
+                width: 42px;
+                padding: 5px 3px;
+                font-size: 0.85em;
+            }
+
+            .total-amount {
+                font-size: 0.75em;
+            }
+
             .qr-container {
-                padding: 20px 15px;
-                margin: 20px 0;
+                padding: 12px;
+                margin: 12px 0;
             }
 
             #qrcode {
-                padding: 10px;
+                padding: 8px;
+                margin: 10px 0;
             }
 
             #qrcode canvas,
             #qrcode img {
-                max-width: 220px !important;
+                max-width: 180px !important;
                 height: auto !important;
             }
 
             .upi-link-btn {
-                padding: 14px;
-                font-size: 1em;
+                padding: 12px;
+                font-size: 0.95em;
+                margin-top: 10px;
             }
         }
 
         @media (max-width: 480px) {
             .modal-content {
-                padding: 20px 15px;
+                padding: 18px 14px;
             }
 
             .modal-content h2 {
-                font-size: 1.2em;
+                font-size: 1.1em;
             }
 
-            .payment-details p {
-                font-size: 0.85em;
+            .payment-info p {
+                font-size: 0.75em;
+            }
+
+            .quantity-selector label {
+                font-size: 0.7em;
             }
 
             .quantity-btn {
-                width: 38px;
-                height: 38px;
+                width: 28px;
+                height: 28px;
+                font-size: 1em;
             }
 
             .quantity-input {
-                width: 60px;
-                font-size: 1em;
+                width: 38px;
+                font-size: 0.8em;
             }
 
             #qrcode canvas,
             #qrcode img {
-                max-width: 200px !important;
+                max-width: 170px !important;
+            }
+
+            .qr-container p {
+                font-size: 0.85em;
             }
         }
 
         /* Better touch targets for mobile */
         @media (hover: none) and (pointer: coarse) {
             .quantity-btn {
-                min-width: 44px;
-                min-height: 44px;
+                min-width: 36px;
+                min-height: 36px;
             }
 
             .option {
@@ -479,8 +513,8 @@
             }
 
             .close-btn {
-                min-width: 44px;
-                min-height: 44px;
+                min-width: 40px;
+                min-height: 40px;
             }
         }
     </style>
@@ -499,11 +533,11 @@
                     <h2 class="plan-title">Daily Mentorship</h2>
                 </div>
                 <div class="plan-options">
-                    <div class="option" onclick="selectPlan('daily-1', 900, '1GroupDailyMentorship', 'months')">
+                    <div class="option" onclick="selectPlan('daily-1', 900, '1GroupDaily', 'months')">
                         <span class="option-name">1 Group</span>
                         <span class="option-price">₹900/month</span>
                     </div>
-                    <div class="option" onclick="selectPlan('daily-2', 1500, '2GroupsDailyMentorship', 'months')">
+                    <div class="option" onclick="selectPlan('daily-2', 1500, '2GroupsDaily', 'months')">
                         <span class="option-name">2 Groups</span>
                         <span class="option-price">₹1500/month</span>
                     </div>
@@ -516,7 +550,7 @@
                     <h2 class="plan-title">Subject Mentorship</h2>
                 </div>
                 <div class="plan-options">
-                    <div class="option" onclick="selectPlan('subject', 1500, 'SubjectMentorship', 'subjects')">
+                    <div class="option" onclick="selectPlan('subject', 1500, 'Subject', 'subjects')">
                         <span class="option-name">Per Subject</span>
                         <span class="option-price">₹1500 until exam</span>
                     </div>
@@ -529,7 +563,7 @@
                     <h2 class="plan-title">One Time Mentorship</h2>
                 </div>
                 <div class="plan-options">
-                    <div class="option" onclick="selectPlan('onetime', 350, 'GoogleMeetCall20mins', 'none')">
+                    <div class="option" onclick="selectPlan('onetime', 350, 'GMeetCall', 'none')">
                         <span class="option-name">Google Meet Call</span>
                         <span class="option-price">₹350 for 20 mins</span>
                     </div>
@@ -564,20 +598,20 @@
             <h2>Complete Payment</h2>
             
             <div class="payment-details">
-                <p><strong>Plan:</strong> <span id="planName"></span></p>
-                <p id="quantityDisplay" style="display: none;"><strong>Quantity:</strong> <span id="planQuantity"></span></p>
-                <p><strong>Amount:</strong> ₹<span id="planAmount"></span></p>
-            </div>
-
-            <div id="quantitySelector" class="quantity-selector" style="display: none;">
-                <label id="quantityLabel">Select Quantity:</label>
-                <div class="quantity-controls">
-                    <button class="quantity-btn" onclick="changeQuantity(-1)">−</button>
-                    <input type="number" class="quantity-input" id="quantityInput" value="1" min="1" onchange="updateTotal()">
-                    <button class="quantity-btn" onclick="changeQuantity(1)">+</button>
+                <div class="payment-info">
+                    <p><strong>Plan:</strong> <span id="planName"></span></p>
+                    <p><strong>Amount:</strong> ₹<span id="planAmount"></span></p>
                 </div>
-                <div class="total-amount">
-                    Total: ₹<span id="totalAmount">0</span>
+                <div id="quantitySelector" class="quantity-selector" style="display: none;">
+                    <label id="quantityLabel">Quantity</label>
+                    <div class="quantity-controls">
+                        <button class="quantity-btn" onclick="changeQuantity(-1)">−</button>
+                        <input type="number" class="quantity-input" id="quantityInput" value="1" min="1" onchange="updateTotal()">
+                        <button class="quantity-btn" onclick="changeQuantity(1)">+</button>
+                    </div>
+                    <div class="total-amount">
+                        Total: ₹<span id="totalAmount">0</span>
+                    </div>
                 </div>
             </div>
 
@@ -588,7 +622,7 @@
 
             <a id="upiLink" class="upi-link-btn" href="#">Pay with UPI App</a>
             
-            <p style="margin-top: 20px; color: #666; font-size: 0.9em; line-height: 1.5;">
+            <p style="margin-top: 12px; color: #666; font-size: 0.8em; line-height: 1.4;">
                 After payment, please share the transaction ID with us
             </p>
             
@@ -600,8 +634,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
         // Hardcoded UPI ID - Replace with your actual UPI ID
-        const UPI_ID = '9940014468@ybl';
-        const MERCHANT_NAME = 'AiysM';
+        const UPI_ID = 'swotifyca@ybl';
+        const MERCHANT_NAME = 'AiyswarryaM';
         
         let selectedPlan = null;
         let qrCodeInstance = null;
