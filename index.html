@@ -701,6 +701,10 @@
                 generateQRCode();
             }
         }
+        
+        function isAndroid() {
+            return /Android/i.test(navigator.userAgent);
+        }
 
         function generateQRCode() {
             if (!selectedPlan) return;
@@ -715,6 +719,9 @@
             }
 
             const upiString = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${selectedPlan.amount}&cu=INR&tn=${encodeURIComponent(description)}`;
+
+            // Generate intent-based URL for Android
+            const intentUrl = `intent://pay?pa=${UPI_ID}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${selectedPlan.amount}&cu=INR&tn=${encodeURIComponent(description)}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end`;
 
             const qrcodeEl = document.getElementById('qrcode');
             if (qrcodeEl) {
@@ -731,7 +738,8 @@
 
             const upiLinkEl = document.getElementById('upiLink');
             if (upiLinkEl) {
-                upiLinkEl.href = upiString;
+                // Use intent-based URL for Android, standard upi:// for others
+                upiLinkEl.href = isAndroid() ? intentUrl : upiString;
             }
         }
 
