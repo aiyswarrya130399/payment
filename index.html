@@ -652,7 +652,7 @@
                 id: 'daily-1group',
                 category: 'Daily Mentorship',
                 name: '1 Group',
-                amount: 900,
+                amount: 1000,
                 period: '/month',
                 description: 'Daily mentorship for one group',
                 popular: false,
@@ -662,7 +662,7 @@
                 id: 'daily-2groups',
                 category: 'Daily Mentorship',
                 name: '2 Groups',
-                amount: 1500,
+                amount: 1700,
                 period: '/month',
                 description: 'Daily mentorship for two groups',
                 popular: true,
@@ -672,7 +672,7 @@
                 id: 'subject-mentorship',
                 category: 'Subject Mentorship',
                 name: 'Single Subject',
-                amount: 1500,
+                amount: 3000,
                 period: '/until exam',
                 description: 'Complete mentorship for one subject',
                 popular: false,
@@ -821,7 +821,7 @@
                 return;
             }
             
-            const description = document.getElementById('planDescription').value.trim() || `${selectedPlan.category} - ${selectedPlan.name}`;
+            const description = document.getElementById('planDescription').value.trim() || selectedPlan.name;
             generatePaymentWithDetails(selectedPlan.amount, description);
         }
         
@@ -831,197 +831,215 @@
                 return;
             }
             
-            const description = document.getElementById('planDescription').value.trim() || `${selectedPlan.category} - ${selectedPlan.name}`;
+            const description = document.getElementById('planDescription').value.trim() || selectedPlan.name;
             
             // Check if merchant has configured their UPI ID
-            if (!MERCHANT_UPI_ID || MERCHANT_UPI_ID === 'yourname@paytm') {
-                alert('⚠️ Merchant needs to configure their UPI ID in config.js first!');
+            if (MERCHANT_UPI_ID === 'yourname@paytm') {
+                alert('⚠️ Merchant needs to configure their UPI ID in the code first!');
                 return;
             }
             
-            // Generate UPI payment link - simplified format
-            const params = new URLSearchParams();
-            params.append('pa', MERCHANT_UPI_ID);
-            params.append('am', selectedPlan.amount.toString());
-            params.append('cu', 'INR');
+            // Generate UPI payment link
+            let upiLink = `upi://pay?pa=${encodeURIComponent(MERCHANT_UPI_ID)}&am=${encodeURIComponent(selectedPlan.amount)}`;
             
             if (MERCHANT_NAME && MERCHANT_NAME !== 'Your Business Name') {
-                params.append('pn', MERCHANT_NAME);
+                upiLink += `&pn=${encodeURIComponent(MERCHANT_NAME)}`;
             }
             
             if (description) {
-                currentUpiLink = `upi://pay?${params.toString()}`;
-        
-        // Clear previous QR code
-        const qrcodeDiv = document.getElementById('qrcode');
-        qrcodeDiv.innerHTML = '';
-        
-        // Generate new QR code
-        qrCodeInstance = new QRCode(qrcodeDiv, {
-            text: currentUpiLink,
-            width: 200,
-            height: 200,
-            colorDark: "#0A0E27",
-            colorLight: "#ffffff",
-            correctLevel: QRCode.CorrectLevel.H
-        });
-        
-        // Show only QR section, hide app buttons
-        document.getElementById('paymentSection').style.display = 'block';
-        document.getElementById('qrcode').parentElement.style.display = 'block';
-        
-        // Hide all buttons except copy link
-        const buttons = document.querySelectorAll('#paymentSection .button');
-        buttons.forEach(btn => {
-            if (btn.textContent.includes('Copy')) {
-                btn.style.display = 'block';
-            } else {
-                btn.style.display = 'none';
+                upiLink += `&tn=${encodeURIComponent(description)}`;
             }
-        });
-        
-        // Hide UPI apps section
-        document.querySelector('.upi-apps').style.display = 'none';
-        document.querySelector('.upi-apps').previousElementSibling.style.display = 'none';
-        
-        // Smooth scroll to QR code
-        setTimeout(() => {
-            qrcodeDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 100);
-    }
-    
-    function generatePayment() {
-        const amount = document.getElementById('amount').value.trim();
-        const description = document.getElementById('description').value.trim();
-        
-        if (!amount || amount <= 0) {
-            alert('Please enter a valid amount');
-            return;
-        }
-        
-        generatePaymentWithDetails(amount, description || 'Payment');
-    }
-    
-    function generatePaymentWithDetails(amount, description) {
-        // Check if merchant has configured their UPI ID
-        if (!MERCHANT_UPI_ID || MERCHANT_UPI_ID === 'yourname@paytm') {
-            alert('⚠️ Please configure your UPI ID in config.js first!\n\nExample:\nconst CONFIG = {\n  MERCHANT_UPI_ID: "yourname@paytm",\n  MERCHANT_NAME: "Your Name"\n};');
-            return;
-        }
-        
-        // Validate UPI ID format
-        if (!MERCHANT_UPI_ID.includes('@')) {
-            alert('⚠️ Invalid UPI ID format. It should be like: yourname@paytm or phonenumber@ybl');
-            return;
-        }
-        
-        // Generate UPI payment link using URLSearchParams for proper encoding
-        const params = new URLSearchParams();
-        params.append('pa', MERCHANT_UPI_ID);  // Payee Address (UPI ID)
-        params.append('am', amount.toString());  // Amount
-        params.append('cu', 'INR');  // Currency
-        
-        // Add merchant name if configured
-        if (MERCHANT_NAME && MERCHANT_NAME !== 'Your Business Name') {
-            params.append('pn', MERCHANT_NAME);  // Payee Name
-        }
-        
-        // Add transaction note/description
-        if (description) {
-            params.append('tn', description);  // Transaction Note
-        }
-        
-        // Build the final UPI link
-        currentUpiLink = `upi://pay?${params.toString()}`;
-        
-        console.log('Generated UPI Link:', currentUpiLink); // For debugging
-        
-        // Clear previous QR code
-        const qrcodeDiv = document.getElementById('qrcode');
-        qrcodeDiv.innerHTML = '';
-        
-        // Generate new QR code
-        qrCodeInstance = new QRCode(qrcodeDiv, {
-            text: currentUpiLink,
-            width: 200,
-            height: 200,
-            colorDark: "#0A0E27",
-            colorLight: "#ffffff",
-            correctLevel: QRCode.CorrectLevel.H
-        });
-        
-        // Show payment section
-        document.getElementById('paymentSection').style.display = 'block';
-        
-        // Make sure all buttons are visible
-        const buttons = document.querySelectorAll('#paymentSection .button');
-        buttons.forEach(btn => btn.style.display = 'block');
-        
-        // Make sure UPI apps section is visible
-        document.querySelector('.upi-apps').style.display = 'grid';
-        const upiAppsNote = document.querySelector('.upi-apps').nextElementSibling;
-        if (upiAppsNote) upiAppsNote.style.display = 'block';
-        
-        // Smooth scroll to QR code
-        setTimeout(() => {
-            qrcodeDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 100);
-    }
-    
-    function openUpiApp() {
-        if (!currentUpiLink) {
-            alert('Please generate payment link first');
-            return;
-        }
-        window.location.href = currentUpiLink;
-    }
-    
-    function openSpecificApp(app) {
-        if (!currentUpiLink) {
-            alert('Please generate payment link first');
-            return;
-        }
-        
-        // Use standard UPI link for all apps - this is more reliable
-        // Most modern UPI apps will intercept the standard upi://pay link
-        window.location.href = currentUpiLink;
-    }
-    
-    function copyLink() {
-        if (!currentUpiLink) {
-            alert('Please generate payment link first');
-            return;
-        }
-        
-        navigator.clipboard.writeText(currentUpiLink).then(() => {
-            const btn = event.target.closest('button');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<span style="position: relative; z-index: 1;">✅ Copied!</span>';
             
+            upiLink += '&cu=INR';
+            currentUpiLink = upiLink;
+            
+            // Clear previous QR code
+            const qrcodeDiv = document.getElementById('qrcode');
+            qrcodeDiv.innerHTML = '';
+            
+            // Generate new QR code
+            qrCodeInstance = new QRCode(qrcodeDiv, {
+                text: upiLink,
+                width: 200,
+                height: 200,
+                colorDark: "#0A0E27",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+            
+            // Show only QR section, hide app buttons
+            document.getElementById('paymentSection').style.display = 'block';
+            document.getElementById('qrcode').parentElement.style.display = 'block';
+            
+            // Hide all buttons except copy link
+            const buttons = document.querySelectorAll('#paymentSection .button');
+            buttons.forEach(btn => {
+                if (btn.textContent.includes('Copy')) {
+                    btn.style.display = 'block';
+                } else {
+                    btn.style.display = 'none';
+                }
+            });
+            
+            // Hide UPI apps section
+            document.querySelector('.upi-apps').style.display = 'none';
+            document.querySelector('.upi-apps').previousElementSibling.style.display = 'none';
+            
+            // Smooth scroll to QR code
             setTimeout(() => {
-                btn.innerHTML = originalText;
-            }, 2000);
-        }).catch(() => {
-            // Fallback for browsers that don't support clipboard API
-            const textArea = document.createElement('textarea');
-            textArea.value = currentUpiLink;
-            document.body.appendChild(textArea);
-            textArea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textArea);
+                qrcodeDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        }
+        
+        function generatePayment() {
+            const amount = document.getElementById('amount').value.trim();
+            const description = document.getElementById('description').value.trim();
             
-            alert('Payment link copied to clipboard!');
+            if (!amount || amount <= 0) {
+                alert('Please enter a valid amount');
+                return;
+            }
+            
+            generatePaymentWithDetails(amount, description || 'Payment');
+        }
+        
+        function generatePaymentWithDetails(amount, description) {
+            // Check if merchant has configured their UPI ID
+            if (MERCHANT_UPI_ID === 'yourname@paytm') {
+                alert('⚠️ Merchant needs to configure their UPI ID in the code first!');
+                return;
+            }
+            
+            // Generate UPI payment link with merchant's UPI ID
+            let upiLink = `upi://pay?pa=${encodeURIComponent(MERCHANT_UPI_ID)}&am=${encodeURIComponent(amount)}`;
+            
+            // Add merchant name if configured
+            if (MERCHANT_NAME && MERCHANT_NAME !== 'Your Business Name') {
+                upiLink += `&pn=${encodeURIComponent(MERCHANT_NAME)}`;
+            }
+            
+            // Add customer's description/note
+            if (description) {
+                upiLink += `&tn=${encodeURIComponent(description)}`;
+            }
+            
+            upiLink += '&cu=INR';
+            currentUpiLink = upiLink;
+            
+            // Clear previous QR code
+            const qrcodeDiv = document.getElementById('qrcode');
+            qrcodeDiv.innerHTML = '';
+            
+            // Generate new QR code
+            qrCodeInstance = new QRCode(qrcodeDiv, {
+                text: upiLink,
+                width: 200,
+                height: 200,
+                colorDark: "#0A0E27",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+            
+            // Show payment section
+            document.getElementById('paymentSection').style.display = 'block';
+            
+            // Make sure all buttons are visible
+            const buttons = document.querySelectorAll('#paymentSection .button');
+            buttons.forEach(btn => btn.style.display = 'block');
+            
+            // Make sure UPI apps section is visible
+            document.querySelector('.upi-apps').style.display = 'grid';
+            const upiAppsNote = document.querySelector('.upi-apps').nextElementSibling;
+            if (upiAppsNote) upiAppsNote.style.display = 'block';
+            
+            // Smooth scroll to QR code
+            setTimeout(() => {
+                qrcodeDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        }
+        
+        function openUpiApp() {
+            if (!currentUpiLink) {
+                alert('Please generate payment link first');
+                return;
+            }
+            window.location.href = currentUpiLink;
+        }
+        
+        function openSpecificApp(app) {
+            if (!currentUpiLink) {
+                alert('Please generate payment link first');
+                return;
+            }
+            
+            let appLink = currentUpiLink;
+            let appName = '';
+            
+            // App-specific deep link formats (works best on Android)
+            switch(app) {
+                case 'phonepe':
+                    appLink = currentUpiLink.replace('upi://pay', 'phonepe://pay');
+                    appName = 'PhonePe';
+                    break;
+                case 'paytm':
+                    appLink = currentUpiLink.replace('upi://pay', 'paytmmp://pay');
+                    appName = 'Paytm';
+                    break;
+                case 'gpay':
+                    appLink = currentUpiLink.replace('upi://pay', 'tez://upi/pay');
+                    appName = 'Google Pay';
+                    break;
+            }
+            
+            // Try to open the specific app
+            const clickTime = Date.now();
+            window.location.href = appLink;
+            
+            // Fallback: If app doesn't open in 2 seconds, try generic UPI link
+            setTimeout(() => {
+                const timeElapsed = Date.now() - clickTime;
+                // If still on the same page (app didn't open), try generic UPI
+                if (timeElapsed > 1800 && document.hasFocus()) {
+                    window.location.href = currentUpiLink;
+                }
+            }, 2000);
+        }
+        
+        function copyLink() {
+            if (!currentUpiLink) {
+                alert('Please generate payment link first');
+                return;
+            }
+            
+            navigator.clipboard.writeText(currentUpiLink).then(() => {
+                const btn = event.target.closest('button');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<span style="position: relative; z-index: 1;">✅ Copied!</span>';
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                }, 2000);
+            }).catch(() => {
+                // Fallback for browsers that don't support clipboard API
+                const textArea = document.createElement('textarea');
+                textArea.value = currentUpiLink;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                alert('Payment link copied to clipboard!');
+            });
+        }
+        
+        // Auto-generate on Enter key
+        document.getElementById('amount').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') generatePayment();
         });
-    }
-    
-    // Auto-generate on Enter key
-    document.getElementById('amount').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') generatePayment();
-    });
-    
-    document.getElementById('description').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') generatePayment();
-    });
-</script>
+        
+        document.getElementById('description').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') generatePayment();
+        });
+    </script>
 </body>
 </html>
